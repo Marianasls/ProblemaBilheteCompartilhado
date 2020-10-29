@@ -2,7 +2,6 @@
  * Detecção e tratamento de deadlocks usando Grafos.
 */
 #include <bits/stdc++.h>
-#include <array>
 using namespace std;
 typedef vector<int> vi;
 typedef pair<int, int> ii;
@@ -79,18 +78,18 @@ void selectResources(int M){
     }
 }
 
-void reservar(int[4][4] vetores, int partida, int destino, array<int,10> possibilidades){
+void reservar(int vetores[4][4], int partida, int destino, vector<int>* possibilidades){
 
     if( vetores[partida][destino] == 1){
         vetores[partida][destino]--;//bloqueando o trajeto
-        possibilidades[] = partida;
+        possibilidades->push_back(partida);
         return;
     }
 }
 
-array<int,10> buscaEmLargura(int[4][4] vetores , int partida, int destino){
+vector<int> buscaEmLargura(int vetores[4][4] , int partida, int destino){
 
-    array<int, 10> possibilidades;
+    vector<int> possibilidades;
     reservar(vetores, partida, destino, &possibilidades); //testa se ja é possivel ir diretamente
     for (size_t i = 0; i < 4; i++)
     {
@@ -104,13 +103,16 @@ array<int,10> buscaEmLargura(int[4][4] vetores , int partida, int destino){
 
 void comprarBilhete( int partida, int destino){
 
-    cout << "possibilidades de trajeto na empresa X";
-    array<int, 10> possibilidades = buscaEmLargura(mapaVetoresEmpresaX, partida, destino );
+    cout << "possibilidades de trajeto na empresa X" << endl;
+    vector<int> possibilidades = buscaEmLargura(mapaVetoresEmpresaX, partida, destino );
+    for (size_t i = 0; i < possibilidades.size(); i++){
+        cout << possibilidades[i] << endl;
+    }
     
 }
 
 int main() {
     srand (time(NULL));
-    comprarBilhete(1,4);
+    comprarBilhete(0,3);
     return 0;
 }

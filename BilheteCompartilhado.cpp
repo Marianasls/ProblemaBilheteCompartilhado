@@ -2,17 +2,30 @@
  * Detecção e tratamento de deadlocks usando Grafos.
 */
 #include <bits/stdc++.h>
+#include <array>
 using namespace std;
 typedef vector<int> vi;
 typedef pair<int, int> ii;
 typedef vector<ii> vii;
-vector<vi> AdjList;  // Lista de adjacencia para o grafo
+vector<vi> AdjList;  // Lista de adjacencias para o grafo
 #define N 20 // Quantidade de trechos/recursos
 vi color;
 #define BLACK 1
 #define GRAY 0
 #define WHITE -1
 
+int mapaVetoresEmpresaX[4][4] = {
+    {0, 0 , 1, 1},//cidade A empresa x
+    {1, 0 , 1, 1},//cidade B empresa x
+    {0, 1 , 0, 1},//cidade C empresa x
+    {1, 1 , 1, 0},//cidade D empresa x
+};
+int mapaVetoresEmpresaY[4][4] = {
+    {0, 0 , 0, 1},//cidade A empresa y
+    {1, 0 , 1, 1},//cidade B empresa y
+    {0, 1 , 0, 1},//cidade C empresa y
+    {1, 1 , 1, 0},//cidade D empresa y
+};
 /**
  * Checa se um grafo direcionado possui ciclos.
  * 
@@ -66,13 +79,38 @@ void selectResources(int M){
     }
 }
 
+void reservar(int[4][4] vetores, int partida, int destino, array<int,10> possibilidades){
+
+    if( vetores[partida][destino] == 1){
+        vetores[partida][destino]--;//bloqueando o trajeto
+        possibilidades[] = partida;
+        return;
+    }
+}
+
+array<int,10> buscaEmLargura(int[4][4] vetores , int partida, int destino){
+
+    array<int, 10> possibilidades;
+    reservar(vetores, partida, destino, &possibilidades); //testa se ja é possivel ir diretamente
+    for (size_t i = 0; i < 4; i++)
+    {
+        if ( vetores[partida][i] == 1){// se existe uma passagem para essa cidade
+            reservar(vetores, i, destino, &possibilidades);//testa se é possivel chegar ao destino
+        }
+    }
+
+    return possibilidades;
+}
+
+void comprarBilhete( int partida, int destino){
+
+    cout << "possibilidades de trajeto na empresa X";
+    array<int, 10> possibilidades = buscaEmLargura(mapaVetoresEmpresaX, partida, destino );
+    
+}
+
 int main() {
     srand (time(NULL));
-
-    int M = rand() % 10 + 2; // M processos - solicitações
-
-    AdjList.assign(M, vi());
-    selectResources(M);
-    cout << detectCycle(M) << endl;
+    comprarBilhete(1,4);
     return 0;
 }

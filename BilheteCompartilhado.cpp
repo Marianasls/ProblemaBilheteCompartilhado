@@ -20,7 +20,7 @@ int mapaVetoresEmpresaX[4][4] = {
     {1, 1 , 1, 0},//cidade D empresa x
 };
 int mapaVetoresEmpresaY[4][4] = {
-    {0, 0 , 0, 1},//cidade A empresa y
+    {0, 1 , 0, 0},//cidade A empresa y
     {1, 0 , 1, 1},//cidade B empresa y
     {0, 1 , 0, 1},//cidade C empresa y
     {1, 1 , 1, 0},//cidade D empresa y
@@ -87,32 +87,56 @@ void reservar(int vetores[4][4], int partida, int destino, vector<int>* possibil
     }
 }
 
-vector<int> buscaEmLargura(int vetores[4][4] , int partida, int destino){
-
-    vector<int> possibilidades;
-    reservar(vetores, partida, destino, &possibilidades); //testa se ja é possivel ir diretamente
+vector<int> buscaEmLargura(int vetores[4][4] , int partida, int destino, vector<int>* possibilidades){
+    
+    reservar(vetores, partida, destino, possibilidades); //testa se ja é possivel ir diretamente
     for (size_t i = 0; i < 4; i++)
     {
         if ( vetores[partida][i] == 1){// se existe uma passagem para essa cidade
-            reservar(vetores, i, destino, &possibilidades);//testa se é possivel chegar ao destino
+            reservar(vetores, i, destino, possibilidades);//testa se é possivel chegar ao destino
         }
     }
-
-    return possibilidades;
 }
 
-void comprarBilhete( int partida, int destino){
+void compraBilhete( int partida, int destino, vector<int>* possibilidadesX, vector<int>* possibilidadesY){
 
     cout << "possibilidades de trajeto na empresa X" << endl;
-    vector<int> possibilidades = buscaEmLargura(mapaVetoresEmpresaX, partida, destino );
-    for (size_t i = 0; i < possibilidades.size(); i++){
-        cout << possibilidades[i] << endl;
+    buscaEmLargura(mapaVetoresEmpresaX, partida, destino, possibilidadesX );
+    for (size_t i = 0; i < possibilidadesX->size(); i++){
+        //cout << "bilhete com parada na cidade " << &possibilidadesX[i] << endl;
     }
-    
+    cout << "possibilidades de trajeto na empresa Y" << endl;
+    buscaEmLargura(mapaVetoresEmpresaY, partida, destino, possibilidadesY );
+    for (size_t i = 0; i < possibilidadesY->size(); i++){
+        cout << "bilhete com parada na cidade " << &possibilidadesY[i] << endl;
+    }
 }
 
 int main() {
     srand (time(NULL));
-    comprarBilhete(0,3);
+    vector<int> TrajetoMariana;
+    vector<int> TrajetoAnderson;
+    int partidaMariana = 0;
+    int partidaAnderson = 1;
+    int destinoMariana = 0;
+    int destinoAnderson = 0;
+    vector<int> ApossibilidadesX;
+    vector<int> MpossibilidadesX;
+    vector<int> ApossibilidadesY;
+    vector<int> MpossibilidadesY;
+    cout << "Mariana desejar comprar uma passagem da cidade 0 para a cidade 3\n";
+    compraBilhete(partidaMariana , destinoMariana, &MpossibilidadesX, &MpossibilidadesY);
+    cout << "Anderson desejar comprar uma passagem da cidade 0 para a cidade 3\n";
+    compraBilhete(partidaAnderson , destinoAnderson, &ApossibilidadesX, &ApossibilidadesY);
+
+    cout << "Mariana escolhe a primeira possibilidade de trajeto na empresa X\n";
+    TrajetoMariana.push_back(MpossibilidadesX[0]);
+    cout << "Anderson escolhe a primeira possibilidade de trajeto na empresa Y\n";
+    TrajetoAnderson.push_back(ApossibilidadesY[0]);
+
+    //restaurando possibilidade de compra dos bilhetes não escolhidos
+    mapaVetoresEmpresaX[partidaAnderson][MpossibilidadesX[0]]++;
+    mapaVetoresEmpresaY[partidaMariana][MpossibilidadesX[1]]++;
+    mapaVetoresEmpresaY[partidaMariana][MpossibilidadesY[0]]++;
     return 0;
 }
